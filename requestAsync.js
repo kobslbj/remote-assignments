@@ -1,37 +1,19 @@
-const axios = require('axios');
-
+const request = require('sync-request');
 const url = "https://ec2-54-64-246-136.ap-northeast-1.compute.amazonaws.com/delay-clock";
 
-function requestCallback(url, callback) {
-    const start = Date.now();
-    axios.get(url)
-        .then(response => {
-            const duration = Date.now() - start;
-            callback(`Execution time for callback request: ${duration}ms`);
-        })
-        .catch(error => {
-            console.error(`Error during callback request: ${error.message}`);
-        });
+let totalTime = 0; // 累計的時間
+
+function requestSync(url) {
+    const startTime = Date.now();
+    const response = request('GET', url);
+    const endTime = Date.now();
+    const executionTime = endTime - startTime;
+    totalTime += executionTime;  // 累加時間
+    console.log(`Execution time: ${executionTime}ms`);
 }
 
-function requestPromise(url) {
-    const start = Date.now();
-    return axios.get(url)
-        .then(response => {
-            const duration = Date.now() - start;
-            return `Execution time for promise request: ${duration}ms`;
-        });
-}
+requestSync(url);
+requestSync(url);
+requestSync(url);
 
-async function requestAsyncAwait(url) {
-    try {
-        const result = await requestPromise(url);
-        console.log(result);
-    } catch (error) {
-        console.error(`Error during async/await request: ${error.message}`);
-    }
-}
-
-requestCallback(url, console.log);
-requestPromise(url).then(console.log);
-requestAsyncAwait(url);
+console.log(`Total execution time: ${totalTime}ms`);  // 印出加總的時間
