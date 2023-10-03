@@ -1,19 +1,59 @@
-const request = require('sync-request');
+const axios = require('axios');
+
 const url = "https://ec2-54-64-246-136.ap-northeast-1.compute.amazonaws.com/delay-clock";
 
-let totalTime = 0; // 累計的時間
+let totalTime = 0;
 
-function requestSync(url) {
-    const startTime = Date.now();
-    const response = request('GET', url);
-    const endTime = Date.now();
-    const executionTime = endTime - startTime;
-    totalTime += executionTime;  // 累加時間
-    console.log(`Execution time: ${executionTime}ms`);
+function addToTotalTime(duration) {
+    totalTime += duration;
 }
 
-requestSync(url);
-requestSync(url);
-requestSync(url);
+function requestCallback(url) {
+    return new Promise((resolve, reject) => {
+        const start = Date.now();
+        axios.get(url)
+            .then(response => {
+                const duration = Date.now() - start;
+                addToTotalTime(duration);
+                resolve(`Execution time for callback request: ${duration}ms`);
+            })
+            .catch(error => {
+                console.error(`Error during callback request: ${error.message}`);
+                reject(error);
+            });
+    });
+}
 
-console.log(`Total execution time: ${totalTime}ms`);  // 印出加總的時間
+function requestPromise(url) {
+    const start = Date.now();
+    return axios.get(url)
+        .then(response => {
+            const duration = Date.now() - start;
+            addToTotalTime(duration);
+            return `Execution time for promise request: ${duration}ms`;
+        });
+}
+
+async function requestAsyncAwait(url) {
+    try {
+        return await requestPromise(url);
+    } catch (error) {
+        console.error(`Error during async/await request: ${error.message}`);
+    }
+}
+
+// Start timer
+const programStart = Date.now();
+
+Promise.all([
+    requestCallback(url),
+    requestPromise(url),
+    requestAsyncAwait(url)
+]).then(results => {
+    results.forEach(result => console.log(result));
+
+    const programEnd = Date.now();
+    console.log(`Total execution time for the program: ${programEnd - programStart}ms`);
+}).catch(error => {
+    console.error('An error occurred during one of the requests.', error);
+});
