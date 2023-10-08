@@ -1,8 +1,8 @@
-require("dotenv").config();
+//require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2/promise");
-const dbPassword = process.env.DATABASE_PASSWORD;
+//const dbPassword = process.env.DATABASE_PASSWORD;
 
 const app = express();
 const port = 3000;
@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 const connection = mysql.createPool({
   host: "appworks-daabase-rds.cuehq6corug3.ap-northeast-1.rds.amazonaws.com",
   user: "admin",
-  password: dbPassword,
+  password: "kk007008",
   database: "assignment",
 });
 
