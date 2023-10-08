@@ -14,7 +14,6 @@ const connection = mysql.createPool({
   database: "assignment",
 });
 
-// 使用者註冊 API
 app.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
 
