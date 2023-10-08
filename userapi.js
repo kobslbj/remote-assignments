@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 const connection = mysql.createPool({
   host: "appworks-daabase-rds.cuehq6corug3.ap-northeast-1.rds.amazonaws.com",
   user: "admin",
-  password: "kk007008",
+  password: "Kk007008",
   database: "assignment",
 });
 
