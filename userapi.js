@@ -1,8 +1,6 @@
-//require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2/promise");
-//const dbPassword = process.env.DATABASE_PASSWORD;
 
 const app = express();
 const port = 3000;
@@ -74,6 +72,7 @@ app.get("/users", async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Error:", error.message);
     return res.status(500).json({ error: "伺服器錯誤" });
   }
 });
