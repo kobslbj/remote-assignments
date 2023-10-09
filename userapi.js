@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2/promise");
@@ -10,7 +11,7 @@ app.use(bodyParser.json());
 const connection = mysql.createPool({
   host: "appworks-daabase-rds.cuehq6corug3.ap-northeast-1.rds.amazonaws.com",
   user: "admin",
-  password: "Kk007008",
+  password: process.env.DATABASE_PASSWORD,
   database: "assignment",
 });
 
@@ -53,34 +54,33 @@ app.post("/users", async (req, res) => {
 
 // 使用者查詢 API
 app.get("/users", async (req, res) => {
-    const { id } = req.query;
-  
-    // 檢查id是否存在且是有效的數字
-    if (!id || isNaN(id)) {
-      return res.status(400).json({ error: "請提供有效的ID" });
+  const { id } = req.query;
+
+  // 檢查id是否存在且是有效的數字
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ error: "請提供有效的ID" });
+  }
+
+  try {
+    const [rows] = await connection.execute(
+      "SELECT id, name, email FROM user WHERE id = ?",
+      [id]
+    );
+    if (rows.length === 0) {
+      return res.status(403).json({ error: "使用者不存在" });
     }
-  
-    try {
-      const [rows] = await connection.execute(
-        "SELECT id, name, email FROM user WHERE id = ?",
-        [id]
-      );
-      if (rows.length === 0) {
-        return res.status(403).json({ error: "使用者不存在" });
-      }
-      const user = rows[0];
-      res.json({
-        data: {
-          user: user,
-          "request-date": req.headers["request-date"],
-        },
-      });
-    } catch (error) {
-      console.error("Error:", error.message);
-      return res.status(500).json({ error: "伺服器錯誤" });
-    }
-  });
-  
+    const user = rows[0];
+    res.json({
+      data: {
+        user: user,
+        "request-date": req.headers["request-date"],
+      },
+    });
+  } catch (error) {
+    console.error("Error:", error.message);
+    return res.status(500).json({ error: "伺服器錯誤" });
+  }
+});
 
 app.listen(port, () => {
   console.log(`伺服器在 http://52.195.76.225 :${port} 開始運行`);
