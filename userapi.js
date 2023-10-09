@@ -5,6 +5,8 @@ const mysql = require("mysql2/promise");
 
 const app = express();
 const port = 3000;
+const HOST_ADDRESS = process.env.HOST_ADDRESS;
+
 
 app.use(bodyParser.json());
 
@@ -87,5 +89,5 @@ app.get("/users", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`伺服器在 http://52.195.76.225 :${port} 開始運行`);
+  console.log(`伺服器在 ${HOST_ADDRESS}:${port} 開始運行`);
 });
