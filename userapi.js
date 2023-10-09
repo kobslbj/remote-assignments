@@ -15,6 +15,10 @@ const connection = mysql.createPool({
   database: "assignment",
 });
 
+app.get('/healthcheck',(request,response)=>{
+  response.send('OK')
+});
+
 app.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
 
