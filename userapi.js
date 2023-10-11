@@ -8,6 +8,11 @@ const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
 
 app.use(bodyParser.json());
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  methods: ['GET', 'POST'], 
+  credentials: true, 
+}));
 
 const connection = mysql.createPool({
   host: "appworks-daabase-rds.cuehq6corug3.ap-northeast-1.rds.amazonaws.com",
