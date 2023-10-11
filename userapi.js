@@ -8,15 +8,25 @@ const app = express();
 const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
 
+const ALLOWED_ORIGINS = ['http://localhost:3000', 'http://52.195.76.225:3000'];
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: (origin, callback) => {
+      if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(bodyParser.json());
+
 const connection = mysql.createPool({
   host: "appworks-daabase-rds.cuehq6corug3.ap-northeast-1.rds.amazonaws.com",
   user: "admin",
@@ -27,6 +37,7 @@ const connection = mysql.createPool({
 app.get("/healthcheck", (request, response) => {
   response.send("OK");
 });
+
 
 app.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
