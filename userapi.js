@@ -2,18 +2,21 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2/promise");
+const cors = require("cors");
 
 const app = express();
 const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(bodyParser.json());
-app.use(cors({
-  origin: 'http://localhost:3000', 
-  methods: ['GET', 'POST'], 
-  credentials: true, 
-}));
-
 const connection = mysql.createPool({
   host: "appworks-daabase-rds.cuehq6corug3.ap-northeast-1.rds.amazonaws.com",
   user: "admin",
@@ -32,7 +35,7 @@ app.post("/users", async (req, res) => {
     !name.match(/^[A-Za-z0-9]+$/) ||
     !email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/) ||
     !password.match(
-      /((?=.*\d)(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])|(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[\~\`\!\@\#\$\%\^\&\*\(\)_\-\+\=\{\[\}\]\|\:\;\"\'\<\,\>\.\?\/\|])).{8,}/,
+      /((?=.*\d)(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])|(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[\~\`\!\@\#\$\%\^\&\*\(\)_\-\+\=\{\[\}\]\|\:\;\"\'\<\,\>\.\?\/\|])).{8,}/
     )
   ) {
     return res.status(400).json({ error: "輸入無效" });
@@ -41,7 +44,7 @@ app.post("/users", async (req, res) => {
   try {
     const [result] = await connection.execute(
       "INSERT INTO user (name, email, password) VALUES (?, ?, ?)",
-      [name, email, password],
+      [name, email, password]
     );
     const user = {
       id: result.insertId,
@@ -74,7 +77,7 @@ app.get("/users", async (req, res) => {
   try {
     const [rows] = await connection.execute(
       "SELECT id, name, email FROM user WHERE id = ?",
-      [id],
+      [id]
     );
     if (rows.length === 0) {
       return res.status(403).json({ error: "使用者不存在" });
