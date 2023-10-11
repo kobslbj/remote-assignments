@@ -4,11 +4,15 @@ import Swal from 'sweetalert2';
 export default function useSignUp() {
   const signup = async (name, email, password) => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
-        name,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/users`,
+        {
+          name,
+          email,
+          password,
+        },
+        { withCredentials: true },
+      ); // Add this line to the axios request
 
       Swal.fire({
         title: '註冊成功',
