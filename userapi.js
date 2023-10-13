@@ -7,7 +7,7 @@ const cors = require("cors");
 const app = express();
 const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
-
+app.use(cors());
 // const ALLOWED_ORIGINS = ["http://localhost:3000", "http://52.195.76.225:3000","http://52.195.76.225:80","http://52.195.76.225/"];
 
 // app.use(
@@ -24,12 +24,12 @@ const HOST_ADDRESS = process.env.HOST_ADDRESS;
 //     allowedHeaders: ["Content-Type", "Authorization"],
 //   })
 // );
-app.use(cors({
-  origin: '*', // 允許所有源
-  methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-  credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+// app.use(cors({
+//   origin: '*', // 允許所有源
+//   methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+//   credentials: true,
+//   allowedHeaders: ["Content-Type", "Authorization"],
+// }));
 app.use(bodyParser.json());
 
 const connection = mysql.createPool({
