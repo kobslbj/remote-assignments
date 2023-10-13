@@ -18,7 +18,7 @@ export default function SignUp() {
     <div className="text-black">
       <p className="mb-3 text-[2rem] font-bold">User Sign Up</p>
       <form className="flex flex-col" onSubmit={handleSubmit}>
-        <label htmlFor="Username" className="mb-2">
+        <label htmlFor="Username" className="flex flex-col mb-2">
           Username:
           <input
             id="Username"
@@ -29,7 +29,7 @@ export default function SignUp() {
           />
         </label>
 
-        <label htmlFor="Email" className="mb-2">
+        <label htmlFor="Email" className="flex flex-col mb-2">
           Email:
           <input
             id="Email"
@@ -41,7 +41,7 @@ export default function SignUp() {
           />
         </label>
 
-        <label htmlFor="Password" className="mb-2">
+        <label htmlFor="Password" className="flex flex-col mb-2">
           Password:
           <input
             id="Password"
