@@ -39,11 +39,11 @@ const connection = mysql.createPool({
   database: "assignment",
 });
 
-app.get("/api/healthcheck", (request, response) => {
+app.get("/healthcheck", (request, response) => {
   response.send("OK");
 });
 
-app.post("/api/users", async (req, res) => {
+app.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
 
   if (
@@ -81,7 +81,7 @@ app.post("/api/users", async (req, res) => {
 });
 
 // 使用者查詢 API
-app.get("/api/users", async (req, res) => {
+app.get("/users", async (req, res) => {
   const { id } = req.query;
 
   // 檢查id是否存在且是有效的數字
