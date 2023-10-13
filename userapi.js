@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
 
-const ALLOWED_ORIGINS = ["http://localhost:3000", "http://52.195.76.225:3000"];
+const ALLOWED_ORIGINS = ["http://localhost:3000", "http://52.195.76.225:3000","http://52.195.76.225:80"];
 
 app.use(
   cors({
