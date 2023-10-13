@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
 
-const ALLOWED_ORIGINS = ['http://localhost:3000', 'http://52.195.76.225:3000'];
+const ALLOWED_ORIGINS = ["http://localhost:3000", "http://52.195.76.225:3000"];
 
 app.use(
   cors({
@@ -16,7 +16,7 @@ app.use(
       if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error("Not allowed by CORS"));
       }
     },
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
@@ -37,7 +37,6 @@ const connection = mysql.createPool({
 app.get("/healthcheck", (request, response) => {
   response.send("OK");
 });
-
 
 app.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
