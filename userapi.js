@@ -110,6 +110,6 @@ app.get("/users", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`伺服器在 ${HOST_ADDRESS}:${port} 開始運行`);
 });
