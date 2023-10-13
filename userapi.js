@@ -2,28 +2,19 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2/promise");
-const cors = require("cors");
+// const cors = require("cors");
 
 const app = express();
 const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
 
-const ALLOWED_ORIGINS = ["http://localhost:3000", "http://52.195.76.225:3000","http://52.195.76.225:80","http://52.195.76.225"];
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// Setting up CORS headers directly
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 app.use(bodyParser.json());
 
