@@ -7,7 +7,7 @@ const cors = require("cors");
 const app = express();
 const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
-const ALLOWED_ORIGINS = ["http://localhost:3000", "http://52.195.76.225:3000","http://52.195.76.225:80","http://52.195.76.225"];
+const ALLOWED_ORIGINS = ["http://localhost:3000", "http://52.195.76.225:3000", "http://52.195.76.225:80", "http://52.195.76.225"];
 
 app.use(
   cors({
@@ -20,7 +20,7 @@ app.use(
     },
     methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "Origin", "Accept", "X-Requested-With"],
   })
 );
 
