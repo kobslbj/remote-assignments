@@ -31,7 +31,7 @@ export default function useSignUp() {
       } else {
         Swal.fire({
           title: '錯誤',
-          text: '伺服器錯誤',
+          text: '輸入無效',
           icon: 'error',
           confirmButtonText: '確定',
         });
