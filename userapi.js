@@ -2,10 +2,27 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2/promise");
+const cors = require("cors");
 
 const app = express();
 const port = 3000;
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
+const ALLOWED_ORIGINS = ["http://localhost:3000", "http://52.195.76.225:3000", "http://52.195.76.225:80", "http://52.195.76.225"];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || ALLOWED_ORIGINS.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "Origin", "Accept", "X-Requested-With"],
+  })
+);
 
 app.use(bodyParser.json());
 
@@ -27,7 +44,7 @@ app.post("/users", async (req, res) => {
     !name.match(/^[A-Za-z0-9]+$/) ||
     !email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/) ||
     !password.match(
-      /((?=.*\d)(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])|(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[\~\`\!\@\#\$\%\^\&\*\(\)_\-\+\=\{\[\}\]\|\:\;\"\'\<\,\>\.\?\/\|])).{8,}/,
+      /((?=.*\d)(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])|(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[\~\`\!\@\#\$\%\^\&\*\(\)_\-\+\=\{\[\}\]\|\:\;\"\'\<\,\>\.\?\/\|])).{8,}/
     )
   ) {
     return res.status(400).json({ error: "輸入無效" });
@@ -36,7 +53,7 @@ app.post("/users", async (req, res) => {
   try {
     const [result] = await connection.execute(
       "INSERT INTO user (name, email, password) VALUES (?, ?, ?)",
-      [name, email, password],
+      [name, email, password]
     );
     const user = {
       id: result.insertId,
@@ -69,7 +86,7 @@ app.get("/users", async (req, res) => {
   try {
     const [rows] = await connection.execute(
       "SELECT id, name, email FROM user WHERE id = ?",
-      [id],
+      [id]
     );
     if (rows.length === 0) {
       return res.status(403).json({ error: "使用者不存在" });
@@ -87,6 +104,6 @@ app.get("/users", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`伺服器在 ${HOST_ADDRESS}:${port} 開始運行`);
 });
